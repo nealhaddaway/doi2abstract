@@ -1,0 +1,113 @@
+---
+title: "getabstract"
+output: html_notebook
+---
+Test bed for DOIs
+
+```{r}
+doi<-"https://doi.org/10.1007/s40362-014-0023-1";test<-getabstract(url);print(test)
+
+
+newurl <- readLines(curl::curl(as.character(httr::GET(doi)[1])))[15]
+test<-gsub("%3A",":",gsub("%2F","/",newurl))
+doi<-gsub('^.*direct=\\s*|\\s*%3Fvia.*$', '', test)
+
+```
+
+
+Properly functioning dois:
+
+doi: 10.1186/2047-2382-2-19
+type: Four subsections (background, methods, results, conclusions)
+journal: Environmental Evidence
+publisher: BioMedCentral
+
+doi: 10.1007/s10530-012-0332-8
+type: single block of text
+journal: Biological Invasions
+publisher: Springer
+
+doi: 10.1007/s13280-016-0773-x
+type: short abstract followed by "Introduction"
+journal: AMBIO
+publisher: Spriner
+
+doi: 10.1002/aqc.2225
+type: numbered list abstract
+journal: Aquatic Conservation - Marine and Freshwater Ecosystems
+publisher: Wiley
+
+doi: 10.1139/cjfas-2016-0261
+type: block abstract followed by references (subscription journal)
+journal: Canadian Journal of Fisheries and Aquatic Sciences
+publisher: Canadian Science Publishing
+
+doi: 10.1017/S0030605313000811
+type: no abstract availabe - publisher response stating this
+journal: Oryx
+publisher: Cambridge University Press
+
+doi: 10.1007/s40362-014-0023-1
+type: abstract not followed by regular subtitle
+journal: Springer Systematic Reviews
+publisher: Springer
+
+
+
+
+Problems requiring resolution:
+
+doi: 10.1016/j.jclinepi.2017.08.010
+type: doi links to blank page (referral to publisher site)
+journal: Journal of Clinical Epidemiology
+publisher: Elsevier
+solution: text <- httr::GET("http://doi.org/10.1016/j.jclinepi.2017.08.010");text[1] (only gets the intermediate link). https://github.com/yusuzech/r-web-scraping-cheat-sheet/blob/master/README.md#rvest3
+
+```{r}
+doi<-"https://doi.org/10.1016/j.envint.2015.07.011"
+newurl <- readLines(curl::curl(as.character(httr::GET(doi)[1])))[15]
+test<-gsub("%3A",":",gsub("%2F","/",newurl))
+doi<-gsub('^.*direct=\\s*|\\s*%3Fvia.*$', '', test)
+```
+
+doi: 10.3354/meps09978
+type: abstract denoted by "ABSTRACT: " inline with text, followed by "KEY WORDS: ", pulling back non-abstract text (keywords, copyright statement, citation links, etc.)
+journal: Marine Ecology Progress Series
+publisher: Inter-Research Science Publisher
+solution: 
+
+doi: 10.1002/ece3.1722
+type: short abstract not followed by "Introduction", "Background", "References" or "This is a preview of subscription content"
+journal: Ecology and Evolution
+publisher: Wiley
+solution: if lines[abstract+1] is NOT a subsection (i.e. less than c.8 words) AND lines[abstract+3] IS a subsection, then return lines[abstract+1]
+
+doi: 10.1111/cobi.12449
+type: no abstract (commentary)
+journal: Conservation Biology
+publisher: Wiley
+solution: return error - "No abstract available"
+
+doi: 10.1016/j.envint.2015.07.011
+type: doi links to blank page (referral to publisher site)
+journal: Environment International
+publisher: Elsevier
+solution: see above
+
+doi: 10.1038/s41559-018-0502-x
+type: abstract is a brief paragraph in bold above the main text
+journal: Nature Ecology & Evolution
+publisher: Nature
+solution: extract first paragraph where the word "abstract" is missing
+
+doi: 10.1016/j.earscirev.2017.12.015
+type: doi links to blank page (referral to publisher site)
+journal: Earth-Science Reviews
+publisher: Elsevier
+solution: see above
+
+doi: 10.1038/s41558-018-0180-3
+type: abstract is a brief paragraph in bold above the main text
+journal: Nature Climate Change
+publisher: Nature
+solution: extract first paragraph where the word "abstract" is missing

@@ -1,0 +1,22 @@
+Package: doi2abstract
+Title: Scrape Abstracts for Scholarly Papers Based on a DOI Input
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Neal",
+           family = "Haddaway",
+           role = c("aut", "cre"),
+           email = "neal_haddaway@hotmail.com",
+           comment = c(ORCID = "0000-0003-3902-2234"))
+Description: This package scrapes abstract text from publisher web pages based on a 
+    digital object identifier (DOI) input. The functions account for articles lacking 
+    abstracts, those with sectioned abstracts (e.g. background, methods, results, 
+    discussion), and abstracts of varying lengths.
+License: `use_mit_license()`
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
+Imports: 
+    htm2txt (>= 2.1.1),
+    ngram (>= 3.0.4),
+    stringr (>= 1.4.0)
