@@ -7,9 +7,6 @@
 #' @export
 
 getabstract <- function(doi = NULL) {
-    abstract <- try(rcrossref::cr_abstract(doi),silent=TRUE)
-    errortext <- as.character(traceback()[1])
-    if(errortext=="stop(\"no abstract found for \", doi, call. = FALSE)") {
       text <- htm2txt::gettxt(doi)
       lines <- strsplit(text, "\n")[[1]]
       if(any(lines %in% c(" ", ""))){
@@ -38,5 +35,5 @@ getabstract <- function(doi = NULL) {
         }
       }
     }
-  }
+
 }

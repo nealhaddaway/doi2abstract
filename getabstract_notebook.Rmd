@@ -5,7 +5,7 @@ output: html_notebook
 Test bed for DOIs
 
 ```{r}
-doi<-"https://doi.org/10.1007/s40362-014-0023-1";test<-getabstract(url);print(test)
+url<-"https://doi.org/10.1007/s10530-012-0332-8";test<-getabstract(url);print(test)
 
 
 newurl <- readLines(curl::curl(as.character(httr::GET(doi)[1])))[15]
